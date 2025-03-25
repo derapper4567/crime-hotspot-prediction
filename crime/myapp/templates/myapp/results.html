@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Prediction Results</h1>
+{% if result.error %}
+    <div class="alert alert-danger">{{ result.error }}</div>
+{% else %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Risk Assessment</h5>
+            <p><strong>Location:</strong> {{ result.address }}</p>
+            <p><strong>Coordinates:</strong> {{ result.coordinates.0|floatformat:6 }}, {{ result.coordinates.1|floatformat:6 }}</p>
+            <p><strong>Crime Type:</strong> {{ result.crime_type }}</p>
+            <p><strong>Risk Level:</strong> 
+                <span class="badge {% if result.risk_level == 'High' %}bg-danger{% else %}bg-success{% endif %}">
+                    {{ result.risk_level }}
+                </span>
+            </p>
+            <p><strong>Probability:</strong> {{ result.risk_probability|floatformat:2 }}</p>
+        </div>
+    </div>
+{% endif %}
+<a href="{% url 'myapp:home' %}" class="btn btn-secondary mt-3">Back</a>
+{% endblock %}
