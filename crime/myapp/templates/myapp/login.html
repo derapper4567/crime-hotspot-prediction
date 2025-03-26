@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .card-body {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">ULINZI KITAA</h2>
+                    
+                    {# Error Messages #}
+                    {% if form.errors or form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div>{{ field.label }}: {{ error }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    {# Login Form #}
+                    <form method="post" action="{% url 'myapp:login' %}" novalidate>
+                        {% csrf_token %}
+                        
+                        {# Username Field #}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" 
+                                   name="username" 
+                                   id="username"
+                                   class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}" 
+                                   placeholder="Enter code (e.g. PS123)" 
+                                   value="{{ form.username.value|default:'' }}"
+                                   required
+                                   autofocus>
+                            
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {# Submit Button #}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,24 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Prediction Results</h1>
-{% if result.error %}
-    <div class="alert alert-danger">{{ result.error }}</div>
-{% else %}
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Risk Assessment</h5>
-            <p><strong>Location:</strong> {{ result.address }}</p>
-            <p><strong>Coordinates:</strong> {{ result.coordinates.0|floatformat:6 }}, {{ result.coordinates.1|floatformat:6 }}</p>
-            <p><strong>Crime Type:</strong> {{ result.crime_type }}</p>
-            <p><strong>Risk Level:</strong> 
-                <span class="badge {% if result.risk_level == 'High' %}bg-danger{% else %}bg-success{% endif %}">
-                    {{ result.risk_level }}
-                </span>
-            </p>
-            <p><strong>Probability:</strong> {{ result.risk_probability|floatformat:2 }}</p>
+<div class="container mt-4">
+    <h1>Prediction Results</h1>
+    
+    {% if result.error %}
+        <div class="alert alert-danger">{{ result.error }}</div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Risk Assessment</h5>
+                    <p><strong>Location:</strong> {{ result.address }}</p>
+                    <p><strong>Coordinates:</strong> {{ result.coordinates.0|floatformat:6 }}, {{ result.coordinates.1|floatformat:6 }}</p>
+                    <p><strong>Crime Type:</strong> {{ result.crime_type }}</p>
+                    <p><strong>Risk Level:</strong> 
+                        <span class="badge {% if result.risk_level == 'High' %}bg-danger{% else %}bg-success{% endif %}">
+                            {{ result.risk_level }}
+                        </span>
+                    </p>
+                    <p><strong>Probability:</strong> {{ result.risk_probability|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Location Map</h5>
+                    <div class="map-container">
+                        {{ result.map_html|safe }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-{% endif %}
-<a href="{% url 'myapp:home' %}" class="btn btn-secondary mt-3">Back</a>
+    {% endif %}
+
+    <a href="{% url 'myapp:home' %}" class="btn btn-secondary mt-3">Back</a>
+</div>
+
+<!-- Leaflet resources -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<style>
+    .map-container {
+        height: 400px;
+        width: 100%;
+        border-radius: 4px;
+    }
+</style>
 {% endblock %}
