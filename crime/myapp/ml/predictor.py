@@ -65,9 +65,15 @@ class CrimePredictor:
                 
         features = features[self.columns]
         
-        proba = self.model.predict_proba(features)[0]
-        prediction = self.model.predict(features)[0]
-        risk_level = 'High' if prediction == 1 else 'Low'
+        proba = self.model.predict_proba(features)[0]  
+        probability = proba[1]  
+
+        if probability >= 0.6:
+            risk_level = 'High'
+        elif probability >= 0.4:
+            risk_level = 'High' 
+        else:
+            risk_level = 'Low'
         
         # Generate the map HTML
         map_html = self.create_map(lat, lon, risk_level)
@@ -77,6 +83,6 @@ class CrimePredictor:
             'coordinates': (lat, lon),
             'crime_type': crime_type,
             'risk_level': risk_level,
-            'risk_probability': proba[1] if risk_level == 'High' else proba[0],
+            'risk_probability': probability,
             'map_html': map_html  
         }
