@@ -1,21 +1,72 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Crime Risk Prediction</h1>
-<form method="post" action="{% url 'myapp:predict' %}">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="address">Location Address:</label>
-        <input type="text" class="form-control" id="address" name="address" required>
+<style>
+    /* Background styling that won't interfere with navbar */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('{% static "myapp/images/pic.jpg" %}');
+        background-size: contain;
+        background-position: center;
+        /* filter: brightness(0.7) blur(2px); */
+        z-index: -1;
+    }
+    
+    /* Content styling */
+    .main-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .card-custom {
+        background-color: rgba(248, 249, 250, 0.95);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        margin-top: 2rem;
+    }
+    
+    /* Ensure navbar remains visible */
+    .navbar {
+        position: relative;
+        z-index: 1000;
+        background-color: rgba(33, 37, 41, 0.9) !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+</style>
+
+<div class="main-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card card-custom p-4">
+                    <h1 class="card-title text-center mb-4">Crime Risk Prediction</h1>
+                    <form method="post" action="{% url 'myapp:predict' %}">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="address">Location Address:</label>
+                            <input type="text" class="form-control" id="address" name="address" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="crime_type">Crime Type:</label>
+                            <select class="form-control" id="crime_type" name="crime_type" required>
+                                {% for crime in crime_types %}
+                                <option value="{{ crime }}">{{ crime }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg py-2">Predict Risk</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="crime_type">Crime Type:</label>
-        <select class="form-control" id="crime_type" name="crime_type" required>
-            {% for crime in crime_types %}
-            <option value="{{ crime }}">{{ crime }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Predict Risk</button>
-</form>
+</div>
 {% endblock %}
